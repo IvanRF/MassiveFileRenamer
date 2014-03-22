@@ -10,7 +10,7 @@ Available for **Windows** and **Linux**. Other OS were not tested yet....
 Requirements: JRE 6 or higher.
 
 ## Download ##
-You can [download](MassiveFileRenamer.zip?raw=true) the zip file containing only the required files to run the application.
+You can [download the latest release](../../releases/latest). The zip file contains only the required files to run the application.
 
 ## Contributions ##
 You can contribuite with translations :)<br/>
