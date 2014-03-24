@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Implementation-Title: Massive File Renamer
-Implementation-Version: 1.5.5
-Implementation-BuildStamp: 2014-03-18 16:42:00
+Implementation-Version: 1.5.6
+Implementation-BuildStamp: 2014-03-24 17:53:00
 Implementation-Vendor: Ivan Ridao Freitas
 Created-By: Ivan Ridao Freitas
 Class-Path: lib/substance-6.1.jar lib/trident-1.3.jar
