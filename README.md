@@ -28,7 +28,7 @@ Example of a massive file extension renaming
 ![](screenshots/3.gif)
 
 ## Settings ##
-<img style="float: right; margin-left: 10px;" src="screenshots/settings-skins.png" />
+<img src="screenshots/settings-skins.png" align="right" />
 It is possible to change the app skin by selecting one of the Substance skins from the application context menu.
 
 In addition, you can set the default values for the *Find* and *Replace with* fields. In order to do that, edit ```config.ini``` and set the values for ```Field.DefaultFind``` and ```Field.DefaultReplace```, respectively.
