@@ -10,7 +10,7 @@ Available for **Windows** and **Linux**. Other OS were not tested yet....
 Requirements: JRE 6 or higher.
 
 ## Download ##
-You can [**download the latest release**](../../releases/latest). The zip file contains only the required files to run the application.
+[**Download the latest release**](../../releases/latest). There you will find installers for Windows, Linux and Mac OS X.
 
 ## Contributions ##
 You can contribuite with **translations** :)<br/>
