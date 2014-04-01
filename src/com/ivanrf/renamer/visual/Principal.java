@@ -28,6 +28,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Locale;
 import java.util.Vector;
@@ -52,6 +54,8 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.pushingpixels.lafwidget.LafWidget;
@@ -70,7 +74,7 @@ import com.ivanrf.renamer.utils.WrapLayout;
 
 public class Principal extends JFrame implements ActionListener, LocaleChangeListener {
 
-	private static final long serialVersionUID = 170314L;
+	private static final long serialVersionUID = 310314L;
 
 	private JLabel findLabel;
 	private JTextField findField;
@@ -89,6 +93,7 @@ public class Principal extends JFrame implements ActionListener, LocaleChangeLis
 	
 	private File[] openFiles;
 	private JFileChooser chooser;
+	private boolean contentsNotSaved = false;
 	
 	private JLabel estadoLabel;
 	private JProgressBar progressBar;
@@ -128,6 +133,14 @@ public class Principal extends JFrame implements ActionListener, LocaleChangeLis
 		Visual.locateOnScreenCenter(this);
 		setTitle("Massive File Renamer");
 		setIconImages(Images.getAppIconImages());
+		
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent evt) {
+				thisWindowClosing();
+			}
+		});
+		
 		setVisible(true);
 	}
 	
@@ -403,10 +416,16 @@ public class Principal extends JFrame implements ActionListener, LocaleChangeLis
 		table.setModel(new FilenamesTableModel(rows, new String[]{ Visual.getString("Name"), Visual.getString("NewName") }));
 		table.getColumnModel().getColumn(NAME_INDEX).setCellRenderer(new FilenamesTableRenderer());
 		table.getColumnModel().getColumn(NEW_NAME_INDEX).setCellRenderer(new FilenamesTableRenderer());
+		table.getModel().addTableModelListener(new TableModelListener() {
+			public void tableChanged(TableModelEvent e) {
+				//A cell was edited
+				checkContentNotSaved();
+			}
+		});
 	}
 	
 	private void updateTable() {
-		if(openFiles!=null){
+		if (openFiles != null) {
 			setEstado(Visual.getString("UpdatingTable"));
 			startIndeterminateProgressBar();
 			
@@ -426,6 +445,7 @@ public class Principal extends JFrame implements ActionListener, LocaleChangeLis
 					try{
 						String[][] rows = get();
 						setTableModel(rows);
+						checkContentNotSaved();
 					} catch(Exception e){
 					}
 					setEstado("");
@@ -435,8 +455,20 @@ public class Principal extends JFrame implements ActionListener, LocaleChangeLis
 		}
 	}
 	
+	private void checkContentNotSaved() {
+		boolean rowModified = false;
+		for (int i = 0; i < table.getRowCount() && !rowModified; i++) {
+			if (!table.getValueAt(i, NAME_INDEX).equals(table.getValueAt(i, NEW_NAME_INDEX)))
+				rowModified = true;
+		}
+		if (this.contentsNotSaved != rowModified) {
+			this.contentsNotSaved = rowModified;
+			getRootPane().putClientProperty(SubstanceLookAndFeel.WINDOW_MODIFIED, rowModified);
+		}
+	}
+	
 	private void replaceButtonActionPerformed() {
-		if(openFiles != null){
+		if (openFiles != null) {
 			setEstado(Visual.getString("CheckingNames"));
 			startIndeterminateProgressBar();
 			
@@ -509,14 +541,14 @@ public class Principal extends JFrame implements ActionListener, LocaleChangeLis
 	}
 
 	private void openButtonActionPerformed() {
-		if(chooser == null) {
+		if (chooser == null) {
 			chooser = new JFileChooser();
 			chooser.setMultiSelectionEnabled(true);	
 			FileExtensionFilter mp3Filter = new FileExtensionFilter("mp3", "MPEG Audio Files");
 			chooser.addChoosableFileFilter(mp3Filter);
 			chooser.setFileFilter(chooser.getChoosableFileFilters()[0]);
 		}
-		if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			openFiles = chooser.getSelectedFiles();
 			updateTable();
 		}
@@ -558,8 +590,8 @@ public class Principal extends JFrame implements ActionListener, LocaleChangeLis
 		startProgressTimer();
 	}
 	
-	private void startProgressTimer(){
-		if(!progressTimer.isRunning()){
+	private void startProgressTimer() {
+		if (!progressTimer.isRunning()) {
 			startProgress = System.currentTimeMillis();
 			progressTimer.start();
 		}
@@ -579,6 +611,14 @@ public class Principal extends JFrame implements ActionListener, LocaleChangeLis
 			long estimatedTimeRemaining = timePerIteration * (progressBar.getMaximum() - currentValue);
 			progressTimeRemainingLabel.setText(Visual.getString("TimeLeftAbbr")+": "+Visual.getDateHsMinSegString(estimatedTimeRemaining));
 		}
+	}
+	
+	private void thisWindowClosing() {
+		setState(NORMAL); //If minimized, maximizes to show a centered dialog
+		
+		if (!contentsNotSaved || 
+			 contentsNotSaved && Visual.showConfirmDialog(Visual.getString("UnsavedChangesMsg"), Visual.getString("Exit")))
+			System.exit(0);
 	}
 	
 	class FilenamesTableModel extends DefaultTableModel {
@@ -607,20 +647,25 @@ public class Principal extends JFrame implements ActionListener, LocaleChangeLis
 					tooltip = openFiles[row].getAbsolutePath();
 				else if (col == NEW_NAME_INDEX) {
 					boolean showExtension = showFileExtensionCheckBox.isSelected();
-					File newFile = FileRenamer.getNewFile(openFiles[row], (String) value, showExtension);
+					File file = openFiles[row];
+					File newFile = FileRenamer.getNewFile(file, (String) value, showExtension);
 					tooltip = newFile.getAbsolutePath();
 					
 					//Checks if newFile already exists in the table
 					boolean duplicated = false;
 					for (int i = 0; i < row && !duplicated; i++) {
 						File newFilePrev = FileRenamer.getNewFile(openFiles[i], (String) table.getValueAt(i, col), showExtension);
-						if(newFile.equals(newFilePrev))
+						if (newFile.equals(newFilePrev))
 							duplicated = true;
 					}
 					if (duplicated) {
 						this.setForeground(Color.RED);
 						tooltip = "<html><p>" + tooltip + "</p>"
 								+ "<b><font color=#ff0000>" +  Visual.getString("DuplicateFilesMsg") + "</font></b></html>";
+					} else {
+						//Highlight rows with changes
+						if (!newFile.equals(file))
+							this.setForeground(new Color(0, 0, 153)); //Dark blue
 					}
 				}
 				this.setToolTipText(tooltip);

@@ -239,6 +239,10 @@ public class Visual {
 		return FocusManager.getCurrentManager().getCurrentFocusCycleRoot(); //FocusManager.getCurrentManager().getPermanentFocusOwner()
 	}
 	
+	public static boolean showConfirmDialog(Object message, String title) {
+		return JOptionPane.showConfirmDialog(getCurrentFocusRoot(), message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.YES_OPTION;
+	}
+	
 	private static void showMessageDialog(Object message, String title, int messageType) {
 		JOptionPane.showMessageDialog(getCurrentFocusRoot(), message, title, messageType);
 	}
