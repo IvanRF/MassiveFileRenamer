@@ -13,7 +13,7 @@ Requirements: JRE 6 or higher.
 [**Download the latest release**](../../releases/latest). There you will find installers for Windows, Linux and Mac OS X.
 
 ## Contributions ##
-You can contribuite with **translations** :)<br/>
+You can contribute with **translations** :)<br/>
 The property files are located in [src/com/ivanrf/renamer/resources](src/com/ivanrf/renamer/resources). Use [Labels.properties](src/com/ivanrf/renamer/resources/Labels.properties) as reference.
 
 Also, it would be nice if someone could **test** it under any **OS** other than Windows or Linux (Ubuntu) and tell me if it works as expected :) 
