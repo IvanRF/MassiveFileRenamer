@@ -10,7 +10,7 @@ Available for **Windows** and **Linux**. Other OS were not tested yet....
 Requirements: JRE 6 or higher.
 
 ## Download ##
-[**Download the latest release of Massive File Renamer**](http://ivanrf.com/portfolio-posts/massive-file-renamer/). There you will find installers for Windows, Linux and Mac OS X.
+[**Download the latest release of Massive File Renamer**](http://ivanrf.com/en/portfolio-posts/massive-file-renamer/). There you will find installers for Windows, Linux and Mac OS X.
 
 ## Contributions ##
 You can contribute with **translations** :)<br/>
