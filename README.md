@@ -10,11 +10,11 @@ Available for **Windows** and **Linux**. Other OS were not tested yet....
 Requirements: JRE 6 or higher.
 
 ## Download ##
-[**Download the latest release**](../../releases/latest). There you will find installers for Windows, Linux and Mac OS X.
+[**Download the latest release of Massive File Renamer**](http://ivanrf.com/en/portfolio-posts/massive-file-renamer/). There you will find installers for Windows, Linux and Mac OS X.
 
 ## Contributions ##
 You can contribute with **translations** :)<br/>
-The property files are located in [src/com/ivanrf/renamer/resources](src/com/ivanrf/renamer/resources). Use [Labels.properties](src/com/ivanrf/renamer/resources/Labels.properties) as reference.
+The property files are located in [src/com/ivanrf/renamer/resources](src/com/ivanrf/renamer/resources). Use [Labels.properties](src/com/ivanrf/renamer/resources/Labels.properties) as a reference.
 
 Also, it would be nice if someone could **test** it under any **OS** other than Windows or Linux (Ubuntu) and tell me if it works as expected :) 
 
